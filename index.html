@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New York Times Co. v. Sullivan - 交互式学习页面</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .case-name {
+            font-size: 1.5rem;
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .toggle-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+        
+        .toggle-btn:hover {
+            background: var(--primary-color);
+        }
+        
+        h3 {
+            color: var(--dark-color);
+            margin: 15px 0 10px;
+        }
+        
+        .content {
+            overflow: visible;
+            transition: none;
+        }
+        
+        .content.collapsed {
+            display: none;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .tool-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .tool-card {
+            background: var(--light-color);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .tool-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .bilingual-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .lang-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
+        .lang-btn {
+            padding: 8px 15px;
+            background: var(--light-color);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .bilingual-content {
+            display: none;
+        }
+        
+        .bilingual-content.active {
+            display: block;
+        }
+        
+        .term-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .term-card {
+            background: var(--light-color);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .english {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .chinese {
+            color: var(--dark-color);
+        }
+        
+        .phrase-item, .sentence-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: var(--light-color);
+            border-radius: 5px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--dark-color);
+            border-top: 1px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .tool-list, .term-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>New York Times Co. v. Sullivan</h1>
+            <div class="case-name">美国最高法院案例 (1964)</div>
+        </header>
+        
+        <div class="main-content">
+            <!-- 设计者部分 -->
+            <section class="section">
+                <h2>
+                    设计者：翻译2302刘畅
+                    <button class="toggle-btn">展开/收起</button>
+                </h2>
+                <div class="content">
+                    <p>本交互式网页由翻译2302刘畅设计开发，旨在提供关于New York Times Co. v. Sullivan案件的全面学习资源。</p>
+                </div>
+            </section>
+            
+            <!-- 设计工具、方法、过程部分 -->
+            <section class="section">
+                <h2>
+                    设计工具、方法、过程
+                    <button class="toggle-btn">展开/收起</button>
+                </h2>
+                <div class="content">
+                    <h3>设计工具</h3>
+                    <div class="tool-list">
+                        <div class="tool-card">
+                            <h4>HTML5</h4>
+                            <p>网页结构搭建</p>
+                        </div>
+                        <div class="tool-card">
+                            <h4>CSS3</h4>
+                            <p>样式设计与响应式布局</p>
+                        </div>
+                        <div class="tool-card">
+                            <h4>JavaScript</h4>
+                            <p>交互功能实现</p>
+                        </div>
+                        <div class="tool-card">
+                            <h4>Figma</h4>
+                            <p>原型设计与UI规划</p>
+                        </div>
+                    </div>
+                    
+                    <h3>设计方法</h3>
+                    <ul>
+                        <li><strong>用户中心设计</strong>：以学习者需求为导向，确保信息易于获取和理解</li>
+                        <li><strong>渐进式披露</strong>：通过交互元素控制信息展示，避免认知过载</li>
+                        <li><strong>响应式设计</strong>：确保在各种设备上都能良好展示</li>
+                    </ul>
+                    
+                    <h3>设计过程</h3>
+                    <ol>
+                        <li><strong>需求分析</strong>：明确学习目标和用户需求，确定内容结构</li>
+                        <li><strong>信息架构</strong>：规划内容层级和导航逻辑</li>
+                        <li><strong>原型设计</strong>：创建线框图和交互原型</li>
+                        <li><strong>视觉设计</strong>：确定色彩方案、字体和整体风格</li>
+                        <li><strong>开发实现</strong>：编写HTML、CSS和JavaScript代码</li>
+                        <li><strong>测试优化</strong>：在不同设备和浏览器上进行测试，优化用户体验</li>
+                        <li><strong>部署上线</strong>：将最终产品部署到服务器</li>
+                    </ol>
+                </div>
+            </section>
+            
+            <!-- 法庭意见书要素部分 -->
+            <section class="section">
+                <h2>
+                    Court Opinion Elements
+                    <button class="toggle-btn">展开/收起</button>
+                </h2>
+                <div class="content">
+                    <h3>Case Background</h3>
+                    <p>New York Times Co. v. Sullivan, 376 U.S. 254(1964) is a landmark case of the United States Supreme Court that established the "actual malice" standard, greatly protecting freedom of the press.</p>
+
+                  
+                    <h3>Key Elements of the Court Opinion</h3>
+                    <ul>
+                        <li><strong>Case Name and Citation</strong>：New York Times Co. v. Sullivan, 376 U.S. 254 (1964)</li>
+                        <li><strong>Petitioner</strong>:  New York Times Company</li>
+                        <li><strong>Respondent</strong>:  L.B. Sullivan, Montgomery City Commissioner</li>
+                        <li><strong>Appellate Court</strong>:  Supreme Court of the United States</li>
+                        <li><strong>Date of Judgment</strong>：March 9, 1964</li>
+                        <li><strong>Chief Justice</strong>:  William J. Brennan, Jr</li>
+                        <li><strong>Case Facts</strong>：
+                            <ul>
+                                <li>The New York Times published a civil rights advertisement criticizing officials in Montgomery, Alabama.</li>                                                               
+                                <li>Police Chief L.B. Sullivan believed the ad was directed at him and filed a defamation lawsuit.</li>
+                                <li>The Alabama court ruled that The New York Times must pay Sullivan $500,000.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Legal Issues</strong>：
+                            <ul>
+                                <li>Does the First Amendment limit public officials from filing defamation lawsuits concerning statements about their official actions?</li>
+                                <li>Do state defamation laws violate the First and Fourteenth Amendments' guarantees of freedom of speech and press?</li>
+                            </ul>
+                        </li>
+                        <li><strong>Holding</strong>：
+                            <ul>
+                                <li>It unanimously overturned the Alabama court's ruling.</li>
+                                <li>It established the 'actual malice' standard: public officials must prove that the defendant knew the statement was false or acted with reckless disregard for the truth in order to win a defamation lawsuit.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Legal reasoning</strong>：
+                            <ul>
+                                <li>The First Amendment protects criticism of public officials' official actions, even if it contains factual errors.</li>
+                                <li>Lack of the 'actual malice' standard can lead to media self-censorship, suppressing public debate.</li>
+                                <li>Criticism of public officials should have 'breathing space' to ensure public discussion.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Significance</strong>：
+                            <ul>
+                                <li>Significantly strengthened the protection of press freedom in the United States.</li>
+                                <li>Later extended to public figures.</li>
+                                <li>It is becoming an important reference for the protection of freedom of speech worldwide.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <h3>Key Legal Principles</h3>
+                    <div class="term-grid">
+                        <div class="term-card">
+                            <div class="english">Actual Malice</div>
+                            <div class="chinese">实际恶意 - 明知虚假或罔顾真相</div>
+                        </div>
+                        <div class="term-card">
+                            <div class="english">Public Official</div>
+                            <div class="chinese">公职人员 - 适用于实际恶意标准的主体</div>
+                        </div>
+                        <div class="term-card">
+                            <div class="english">Breathing Space</div>
+                            <div class="chinese">呼吸空间 - 言论自由所需的保护范围</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 双语知识库部分 -->
+            <section class="section">
+                <h2>
+                    双语知识库
+                    <button class="toggle-btn">展开/收起</button>
+                </h2>
+                <div class="content">
+                    <div class="bilingual-section">
+                        <div class="lang-toggle">
+                            <button class="lang-btn active" data-lang="terms">术语 (20个)</button>
+                            <button class="lang-btn" data-lang="phrases">短语 (10个)</button>
+                            <button class="lang-btn" data-lang="sentences">典型句型 (5个)</button>
+                        </div>
+                        
+                        <div id="terms" class="bilingual-content active">
+                            <h3>法律术语</h3>
+                            <div class="term-grid">
+                                <div class="term-card">
+                                    <div class="english">Defamation</div>
+                                    <div class="chinese">诽谤</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Libel</div>
+                                    <div class="chinese">书面诽谤</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Slander</div>
+                                    <div class="chinese">口头诽谤</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Actual Malice</div>
+                                    <div class="chinese">实际恶意</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Public Official</div>
+                                    <div class="chinese">公职人员</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">First Amendment</div>
+                                    <div class="chinese">第一修正案</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Freedom of Speech</div>
+                                    <div class="chinese">言论自由</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Freedom of the Press</div>
+                                    <div class="chinese">新闻自由</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Supreme Court</div>
+                                    <div class="chinese">最高法院</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Lawsuit</div>
+                                    <div class="chinese">诉讼</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Plaintiff</div>
+                                    <div class="chinese">原告</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Defendant</div>
+                                    <div class="chinese">被告</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Damages</div>
+                                    <div class="chinese">损害赔偿</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Precedent</div>
+                                    <div class="chinese">判例</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Constitutional</div>
+                                    <div class="chinese">宪法的</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Unconstitutional</div>
+                                    <div class="chinese">违宪的</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Civil Rights</div>
+                                    <div class="chinese">公民权利</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Due Process</div>
+                                    <div class="chinese">正当程序</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Judicial Review</div>
+                                    <div class="chinese">司法审查</div>
+                                </div>
+                                <div class="term-card">
+                                    <div class="english">Landmark Case</div>
+                                    <div class="chinese">里程碑案件</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="phrases" class="bilingual-content">
+                            <h3>常用短语</h3>
+                            <div class="phrase-list">
+                                <div class="phrase-item">
+                                    <div class="english">Freedom of the press</div>
+                                    <div class="chinese">新闻自由</div>
+                                </div>
+                                <div class="phrase-item">
+                                    <div class="english">Public figure</div>
+                                    <div class="chinese">公众人物</div>
+                                </div>
+                                <div class="phrase-item">
+                                    <div class="english">Legal precedent</div>
+                                    <div class="chinese">法律先例</div>
+                                </div>
+                                <div class="phrase-item">
+                                    <div class="english">Constitutional protection</div>
+                                    <div class="chinese">宪法保护</div>
+                                </div>
+                                <div class="phrase-item">
+                                    <div class="english">Civil lawsuit</div>
+                                    <div class="chinese">民事诉讼</div>
+                                </div>
+                                <div class="phrase-item">
+                                    <div class="english">Supreme Court ruling</div>
+                                    <div class="chinese">最高法院裁决</div>
+                                </div>
+                                <div class="phrase-item">
+                                    <div class="english">Legal standard</div>
+                                    <div class="chinese">法律标准</div>
+                                </div>
+                                <div class="phrase-item">
+                                    <div class="english">Press freedom</div>
+                                    <div class="chinese">新闻自由</div>
+                                </div>
+                                <div class="phrase-item">
+                                    <div class="english">Burden of proof</div>
+                                    <div class="chinese">举证责任</div>
+                                </div>
+                                <div class="phrase-item">
+                                    <div class="english">Legal doctrine</div>
+                                    <div class="chinese">法律原则</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="sentences" class="bilingual-content">
+                            <h3>典型句型</h3>
+                            <div class="sentence-list">
+                                <div class="sentence-item">
+                                    <div class="english">The Court held that the First Amendment protects the publication of all statements, even false ones, about the conduct of public officials except when made with actual malice.</div>
+                                    <div class="chinese">法院认为，第一修正案保护所有关于公职人员行为的陈述，即使是虚假陈述，除非是出于实际恶意。</div>
+                                </div>
+                                <div class="sentence-item">
+                                    <div class="english">A public official cannot recover damages for a defamatory falsehood relating to his official conduct unless he proves that the statement was made with actual malice.</div>
+                                    <div class="chinese">公职人员不能就其官方行为的诽谤性虚假陈述获得损害赔偿，除非他证明该陈述是出于实际恶意。</div>
+                                </div>
+                                <div class="sentence-item">
+                                    <div class="english">The actual malice standard requires that the defendant knew the statement was false or acted with reckless disregard of whether it was false or not.</div>
+                                    <div class="chinese">实际恶意标准要求被告明知陈述虚假或罔顾其真假。</div>
+                                </div>
+                                <div class="sentence-item">
+                                    <div class="english">This case established an important precedent for press freedom in the United States.</div>
+                                    <div class="chinese">这个案件为美国的新闻自由确立了一个重要先例。</div>
+                                </div>
+                                <div class="sentence-item">
+                                    <div class="english">The ruling significantly expanded the protections afforded to the press under the First Amendment.</div>
+                                    <div class="chinese">这一裁决显著扩大了第一修正案对新闻媒体的保护。</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <p>© 2025 New York Times Co. v. Sullivan 交互学习页面 | 设计用于展示目的</p>
+        </footer>
+    </div>
+
+    <script>
+        // 切换部分内容的展开/收起
+        document.querySelectorAll('.toggle-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const content = this.parentElement.nextElementSibling;
+                if (content.style.display === 'none') {
+                    content.style.display = 'block';
+                } else {
+                    content.style.display = 'none';
+                }
+            });
+        });
+        
+        // 双语知识库选项卡切换
+        document.querySelectorAll('.lang-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有按钮的active类
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // 为当前按钮添加active类
+                this.classList.add('active');
+                
+                // 隐藏所有内容
+                document.querySelectorAll('.bilingual-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // 显示对应内容
+                const lang = this.getAttribute('data-lang');
+                document.getElementById(lang).classList.add('active');
+            });
+        });
+        
+        // 页面加载时添加动画效果
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.section').forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>
